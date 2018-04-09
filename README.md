@@ -14,4 +14,4 @@
 默认加载地图<code>map.dat</code>
 Game-New Game：开始新游戏
 Game-Load Map:加载新地图
-![image]（https://github.com/justko/TankGame/raw/master/Screenshots/Screenshot%20from%202018-04-09%2010-35-18.png)
+![一个图片](https://github.com/justko/TankGame/raw/master/Screenshots/Screenshot_1.png)
