@@ -14,5 +14,5 @@
 * 默认加载地图<code>map.dat</code>
 * *Game - New Game*：开始新游戏
 * *Game - Load Map*:加载新地图
-* 所以运行目录下必须有<code>map.dat</code>
-![一个图片](https://github.com/justko/TankGame/raw/master/Screenshots/Screenshot_1.png)
+* 所以运行目录下必须有<code>map.dat</code>，其中至少有width×height个元素
+* ![一个图片](https://github.com/justko/TankGame/raw/master/Screenshots/Screenshot_1.png)
