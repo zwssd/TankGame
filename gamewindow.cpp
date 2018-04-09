@@ -4,7 +4,6 @@
 #include"gamewidget.h"
 #include<thread>
 #include<QVBoxLayout>
-#include"mapwindow.h"
 #include<unistd.h>
 #include<QDebug>
 #include<QFileDialog>
