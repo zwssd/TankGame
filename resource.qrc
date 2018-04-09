@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>res/water.gif</file>
+        <file>res/steel.gif</file>
+        <file>res/player2.gif</file>
+        <file>res/player.gif</file>
+        <file>res/normal.gif</file>
+        <file>res/grass.gif</file>
+        <file>res/enemy.gif</file>
+        <file>res/bullet.gif</file>
+        <file>res/boss.gif</file>
+        <file>res/blank.gif</file>
+    </qresource>
+</RCC>
