@@ -1,18 +1,9 @@
 #include "bullet.h"
-#include<sys/time.h>
 #include"settings.h"
-#include<QDebug>
 Bullet::Bullet(int x,int y,Direction direction,int speed)
     :x(x),y(y),direction(direction),speed(speed){
-    gettimeofday(&moveTime,nullptr);
 }
-void Bullet::move(){
-    timeval current;
-    gettimeofday(&current,nullptr);
-    int distance
-            =(current.tv_sec*1000+current.tv_usec/1000          //ms
-              -moveTime.tv_sec*1000-moveTime.tv_usec/1000)      //ms
-            *speed/1000;
+void Bullet::move(int distance){
     switch (direction) {
     case Direction::UP:
         y-=distance;
@@ -29,16 +20,6 @@ void Bullet::move(){
     default:
         break;
     }
-    moveTime=current;
-}
-int Bullet::getX()const{
-    return x;
-}
-int Bullet::getY()const{
-    return y;
-}
-Direction Bullet::getDirection()const{
-    return direction;
 }
 bool Bullet::isOutside()const{
     if(x<0||y<0
@@ -47,7 +28,7 @@ bool Bullet::isOutside()const{
         return true;
     return false;
 }
-bool Bullet::isCollideWall(MapData &mapData){
+bool Bullet::isCollideWall(MapData &mapData) const{
     int xAt,yAt;
     bool result=false;
     switch(direction){
@@ -168,7 +149,14 @@ bool Bullet::isCollideTank(Tank &tank) const{
             &&this->y<(y+2)*Settings::blockLength+Settings::bulletRadius;
 }
 bool Bullet::isCollideBullet(Bullet &bullet) const{
-    int diffX=bullet.getX()-x;
-    int diffY=bullet.getY()-y;
+    int diffX=bullet.x-x;
+    int diffY=bullet.y-y;
     return sqrt(diffX*diffX+diffY*diffY)<Settings::bulletRadius;
+}
+void Bullet::draw(QPainter &pen){
+    QPixmap pic(":/image/res/bullet.gif");
+    pen.drawPixmap(x-Settings::bulletSize/2,
+                   y-Settings::bulletSize/2,
+                   Settings::bulletSize,Settings::bulletSize,
+                   pic);
 }
