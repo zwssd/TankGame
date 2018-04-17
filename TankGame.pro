@@ -34,7 +34,8 @@ SOURCES += \
     tanktype.cpp \
     direction.cpp \
     tank.cpp \
-    bullet.cpp
+    bullet.cpp \
+    scorewidget.cpp
 
 HEADERS += \
         gamewindow.h \
@@ -46,11 +47,13 @@ HEADERS += \
     tanktype.h \
     direction.h \
     tank.h \
-    bullet.h
+    bullet.h \
+    scorewidget.h
 
 FORMS += \
         gamewindow.ui \
-    gamewidget.ui
+    gamewidget.ui \
+    scorewidget.ui
 
 RESOURCES += \
     resource.qrc

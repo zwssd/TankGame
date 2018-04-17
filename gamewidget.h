@@ -18,9 +18,6 @@ public:
 private:
     Ui::GameWidget *ui;
     Game *game;
-    void drawMap();
-    void drawTank(Tank& tank);
-    void drawGrass();
 };
 
 #endif // GAMEWIDGET_H

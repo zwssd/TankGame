@@ -4,25 +4,43 @@
 #include<QDebug>
 #include<QMainWindow>
 #include<unistd.h>
+#include<sys/time.h>
 Game::Game(std::string filename):
     allEnemy(Settings::allEnemy),
     mapData(Settings::width,Settings::height,filename),
     player(TankType::PLAYER,5,Settings::height-2,Direction::UP),
-    keyInput(-1),isStarted(true),gameOver(false){
+    keyInput(-1),isStarted(false),gameOver(false){
 }
 Game::~Game(){}
-//获得地图
+void Game::draw(QPainter &pen){
+    mapData.draw(pen);
+    player.draw(pen);
+    for(Tank& e:enemy){
+        e.draw(pen);
+    }
+    if(player.getBullet()){
+        player.getBullet()->draw(pen);
+    }
+    for(Tank& e:enemy){
+        if(e.getBullet()){
+            e.getBullet()->draw(pen);
+        }
+    }
+    mapData.drawGrass(pen);
+}
+//Getter start
+/*
 MapData &Game::getMapData(){
     return mapData;
 }
-//获得玩家
-Tank& Game::getPlayer(){
-    return player;
+*/
+int Game::getAllEnemy(){
+    return allEnemy;
 }
-//获得敌人
-std::list<Tank>& Game::getEnemy(){
-    return enemy;
+bool Game::getIsStarted(){
+    return isStarted;
 }
+
 //保存输入按键
 void Game::input(int key){
     keyInput=key;
@@ -33,7 +51,13 @@ void Game::stop(){
 }
 //启动新进程
 void Game::start(Game *game,QMainWindow *w){
+    Game::connect(game,SIGNAL(up()) ,w,SLOT(update()));
+    //
+    game->isStarted=true;
     time_t lastAction=time(nullptr);
+    timeval lastMoveTime;
+    gettimeofday(&lastMoveTime,nullptr);
+    //
     while(game->isStarted&&!game->gameOver){
         //处理输入
         switch (game->keyInput) {
@@ -41,13 +65,13 @@ void Game::start(Game *game,QMainWindow *w){
             game->player.moveOn(game->mapData,Direction::UP);
             break;
         case Qt::Key_Down:
-            game->player.moveOn(game->getMapData(),Direction::DOWN);
+            game->player.moveOn(game->mapData,Direction::DOWN);
             break;
         case Qt::Key_Left:
-            game->player.moveOn(game->getMapData(),Direction::LEFT);
+            game->player.moveOn(game->mapData,Direction::LEFT);
             break;
         case Qt::Key_Right:
-            game->player.moveOn(game->getMapData(),Direction::RIGHT);
+            game->player.moveOn(game->mapData,Direction::RIGHT);
             break;
         case Qt::Key_Space:
             game->player.shoot();
@@ -55,30 +79,39 @@ void Game::start(Game *game,QMainWindow *w){
         default:
             break;
         }
+
         game->keyInput=-1;
-        usleep(50000);//休息50ms
+        usleep(20000);//休息50ms
         //补充敌人
         while(game->enemy.size()<Settings::maxExist&&game->allEnemy>0){
             game->enemy.emplace_back(Tank(TankType::ENERMY,0,0,Direction::DOWN));
             game->allEnemy--;
-            qDebug()<<game->allEnemy;
         }
+        //
+
         //
         bool pbShouldDestroy=false;
 
+        //
+        timeval currentMoveTime;
+        gettimeofday(&currentMoveTime,nullptr);
+        int distance=(currentMoveTime.tv_sec*1000+currentMoveTime.tv_usec/1000          //ms
+                  -lastMoveTime.tv_sec*1000-lastMoveTime.tv_usec/1000)                  //ms
+                *Settings::bulletSpeed/1000;
+        lastMoveTime=currentMoveTime;
         //更新玩家子弹移动
         Bullet* pbullet=game->player.getBullet();
         if(pbullet!=nullptr){
-            pbullet->move();
-            pbShouldDestroy=pbullet->isCollideWall(game->getMapData());
+            pbullet->move(distance);
+            pbShouldDestroy=pbullet->isCollideWall(game->mapData);
             if(pbullet->isOutside())pbShouldDestroy=true;
         }
 
         //
-        for(auto e=game->getEnemy().begin();e!=game->getEnemy().end();){
+        for(auto e=game->enemy.begin();e!=game->enemy.end();){
             //敌军被击杀
             if(pbullet!=nullptr&&pbullet->isCollideTank(*e)){
-                e=game->getEnemy().erase(e);
+                e=game->enemy.erase(e);
                 pbShouldDestroy=true;
                 continue;
             }
@@ -86,8 +119,8 @@ void Game::start(Game *game,QMainWindow *w){
             bool ebShouldDestroy=false;
             Bullet* ebullet=e->getBullet();
             if(ebullet!=nullptr){
-                ebullet->move();
-                ebShouldDestroy=ebullet->isCollideWall(game->getMapData());
+                ebullet->move(distance);
+                ebShouldDestroy=ebullet->isCollideWall(game->mapData);
                 if(ebullet->isCollideTank(game->player)){
                     ebShouldDestroy=true;
                     game->gameOver=true;
@@ -105,15 +138,14 @@ void Game::start(Game *game,QMainWindow *w){
         //敌军random动作更新
         time_t current=time(nullptr);
         if(current-lastAction>=1){
-            for(Tank& e:game->getEnemy()){
-                e.action(game->getMapData());
+            for(Tank& e:game->enemy){
+                e.action(game->mapData);
             }
             lastAction=current;
         }
         //更新画面
-        w->update();
+         emit game->up();
     }
-    game->isStarted=true;
     if(game->gameOver){
         qDebug()<<"OVER";
     }
