@@ -4,23 +4,21 @@
 #include"direction.h"
 #include"tank.h"
 #include"mapdata.h"
+#include<QPainter>
 class Tank;
 class Bullet
 {
 public:
     Bullet(int x, int y, Direction direction,int speed);
-    void move();
-    //
-    int getX()const;
-    int getY()const;
-    Direction getDirection()const;
-    //
+    void move(int distance);
+
+    void draw(QPainter& pen);
+
     bool isOutside()const;
     bool isCollideTank(Tank& tank)const;
     bool isCollideBullet(Bullet& bullet)const;
-    bool isCollideWall(MapData& mapData);
+    bool isCollideWall(MapData& mapData)const;
 private:
-    timeval moveTime;
     int x,y;
     const Direction direction;
     double speed;
