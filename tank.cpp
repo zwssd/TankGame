@@ -11,9 +11,45 @@ Tank::Tank(TankType type,int x, int y, Direction direction)
 Tank::~Tank(){
     delete bullet;
 }
-bool Tank::moveOn(const MapData &mapData, Direction direction){
-    if(this->direction!=direction){
-        this->direction=direction;
+
+
+void Tank::draw(QPainter &pen){
+    QPixmap pic;
+    switch (type) {
+    case TankType::PLAYER:
+        pic.load(":/image/res/player.gif");
+        break;
+    case TankType::ENERMY:
+        pic.load(":/image/res/enemy.gif");
+        break;
+    default:
+        break;
+    }
+    QMatrix r;
+    switch (direction) {
+    case Direction::RIGHT:
+        r.rotate(90);
+        break;
+    case Direction::DOWN:
+        r.rotate(180);
+        break;
+    case Direction::LEFT:
+        r.rotate(270);
+        break;
+    default:
+        break;
+    }
+    pen.drawPixmap(x*Settings::blockLength,
+                   y*Settings::blockLength,
+                   2*Settings::blockLength,
+                   2*Settings::blockLength,
+                   pic.transformed(r));
+}
+
+
+bool Tank::moveOn(const MapData &mapData, Direction input){
+    if(direction!=input){
+        direction=input;
         return true;
     }
     switch (direction) {
@@ -74,9 +110,9 @@ void Tank::shoot(){
 void Tank::action(const MapData&mapData){
     static Direction choice[4]={Direction::DOWN,Direction::LEFT,
                                 Direction::RIGHT,Direction::UP};
-    timeval t;
-    gettimeofday(&t,nullptr);
-    srand(t.tv_usec);
+    timeval seed;
+    gettimeofday(&seed,nullptr);
+    srand(seed.tv_usec);
     if(!lastState)lastChoice=rand()%4;
     else{
         int i=rand()%9;
@@ -85,17 +121,12 @@ void Tank::action(const MapData&mapData){
     lastState=moveOn(mapData,choice[lastChoice]);
     if(rand()%3==2)shoot();         //1/3de jilv sheji
 }
+//
 void Tank::destroyBullet(){
     delete bullet;
     bullet=nullptr;
 }
 //Getter
-TankType Tank::getType() const{
-    return type;
-}
-Direction Tank::getDirection() const{
-    return direction;
-}
 int Tank::getX() const{
     return x;
 }

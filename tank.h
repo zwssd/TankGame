@@ -4,7 +4,7 @@
 #include"mapdata.h"
 #include"tanktype.h"
 #include"bullet.h"
-#include<QWidget>
+#include<QPainter>
 class Bullet;
 class Tank{
 public:
@@ -12,13 +12,12 @@ public:
     ~Tank();
     bool moveOn(const MapData& mapData,Direction direction);
     //
+    void draw(QPainter& pen);
     void shoot();
     void destroyBullet();
     void action(const MapData &mapData);
     //Getter
     Bullet* &getBullet();
-    TankType getType()const;
-    Direction getDirection()const;
     int getX()const;
     int getY()const;
 private:
