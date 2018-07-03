@@ -1,6 +1,7 @@
 #include "bullet.h"
 #include "settings.h"
 #include "math.h"
+#include<QDebug>
 Bullet::Bullet(int x,int y,Direction direction,int speed)
     :x(x),y(y),direction(direction),speed(speed){
 }
@@ -156,6 +157,7 @@ bool Bullet::isCollideBullet(Bullet &bullet) const{
 }
 void Bullet::draw(QPainter &pen){
     QPixmap pic(":/image/res/bullet.gif");
+    qDebug()<<"xx="<<x;
     pen.drawPixmap(x-Settings::bulletSize/2,
                    y-Settings::bulletSize/2,
                    Settings::bulletSize,Settings::bulletSize,

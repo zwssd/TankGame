@@ -18,6 +18,9 @@ void Tank::draw(QPainter &pen){
     switch (type) {
     case TankType::PLAYER:
         pic.load(":/image/res/player.gif");
+    qDebug()<<"x="<<x;
+    qDebug()<<"y="<<y;
+    qDebug()<<"tankSize="<<Settings::tankSize;
         break;
     case TankType::ENERMY:
         pic.load(":/image/res/enemy.gif");
@@ -39,15 +42,15 @@ void Tank::draw(QPainter &pen){
     default:
         break;
     }
-    pen.drawPixmap(x*Settings::blockLength,
-                   y*Settings::blockLength,
+    pen.drawPixmap(x,
+                   y,
                    2*Settings::blockLength,
                    2*Settings::blockLength,
                    pic.transformed(r));
 }
 
 
-bool Tank::moveOn(const MapData &mapData, Direction input){
+bool Tank::moveOn(const MapData &mapData, Direction input, int distanceTank){
     if(direction!=input){
         direction=input;
         return true;
@@ -55,25 +58,25 @@ bool Tank::moveOn(const MapData &mapData, Direction input){
     switch (direction) {
     case Direction::UP:
         if((!mapData.isSolid(x,y-1))&&(!mapData.isSolid(x+1,y-1))){
-            y--;
+            y-=distanceTank;
             return true;
         }
         break;
     case Direction::DOWN:
         if(!mapData.isSolid(x,y+2)&&!mapData.isSolid(x+1,y+2)){
-            y++;
+            y+=distanceTank;
             return true;
         }
         break;
     case Direction::LEFT:
         if(!mapData.isSolid(x-1,y)&&!mapData.isSolid(x-1,y+1)){
-            x--;
+            x-=distanceTank;
             return true;
         }
         break;
     case Direction::RIGHT:
         if(!mapData.isSolid(x+2,y)&&!mapData.isSolid(x+2,y+1)){
-            x++;
+            x+=distanceTank;
             return true;
         }
         break;
@@ -84,7 +87,7 @@ bool Tank::moveOn(const MapData &mapData, Direction input){
 }
 void Tank::shoot(){
     if(bullet==nullptr){
-        double bx=x*Settings::blockLength,by=y*Settings::blockLength;
+        double bx=x,by=y;
         switch (direction) {
         case Direction::UP:
             bx+=Settings::blockLength;
@@ -118,7 +121,7 @@ void Tank::action(const MapData&mapData){
         int i=rand()%9;
         if(i<4)lastChoice=i;
     }
-    lastState=moveOn(mapData,choice[lastChoice]);
+    lastState=moveOn(mapData,choice[lastChoice],1);
     if(rand()%3==2)shoot();         //1/3de jilv sheji
 }
 //

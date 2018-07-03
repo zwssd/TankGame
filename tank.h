@@ -10,7 +10,7 @@ class Tank{
 public:
     Tank(TankType type, int x, int y, Direction direction);
     ~Tank();
-    bool moveOn(const MapData& mapData,Direction direction);
+    bool moveOn(const MapData& mapData,Direction direction,int distanceTank);
     //
     void draw(QPainter& pen);
     void shoot();

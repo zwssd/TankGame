@@ -8,7 +8,7 @@
 Game::Game(std::string filename):
     allEnemy(Settings::allEnemy),
     mapData(Settings::width,Settings::height,filename),
-    player(TankType::PLAYER,5,Settings::height-2,Direction::UP),
+    player(TankType::PLAYER,5*Settings::blockLength,(Settings::height-2)*Settings::blockLength,Direction::UP),
     keyInput(-1),isStarted(false),gameOver(false){
 }
 Game::~Game(){}
@@ -58,21 +58,38 @@ void Game::start(Game *game,QMainWindow *w){
     time_t lastAction=time(nullptr);
     timeval lastMoveTime;
     gettimeofday(&lastMoveTime,nullptr);
+    timeval lastTankMoveTime;
+    gettimeofday(&lastTankMoveTime,nullptr);
     //
     while(game->isStarted&&!game->gameOver){
+
+        //处理坦克速度
+        timeval currentTankMoveTime;
+        gettimeofday(&currentTankMoveTime,nullptr);
+        int distanceTank=(currentTankMoveTime.tv_sec*1000+currentTankMoveTime.tv_usec/1000          //ms
+                  -lastTankMoveTime.tv_sec*1000-lastTankMoveTime.tv_usec/1000)                  //ms
+                *Settings::tankSpeed/1000;
+        qDebug()<<"tankSpeed="<<Settings::tankSpeed;
+        qDebug()<<"distanceTank="<<distanceTank;
+        qDebug()<<"currentTankMoveTime.tv_sec="<<currentTankMoveTime.tv_sec;
+        qDebug()<<"currentTankMoveTime.tv_usec="<<currentTankMoveTime.tv_usec;
+        qDebug()<<"lastTankMoveTime.tv_sec="<<lastTankMoveTime.tv_sec;
+        qDebug()<<"lastTankMoveTime.tv_usec="<<lastTankMoveTime.tv_usec;
+        lastTankMoveTime=currentTankMoveTime;
+
         //处理输入
         switch (game->keyInput) {
         case Qt::Key_Up:
-            game->player.moveOn(game->mapData,Direction::UP);
+            game->player.moveOn(game->mapData,Direction::UP,distanceTank);
             break;
         case Qt::Key_Down:
-            game->player.moveOn(game->mapData,Direction::DOWN);
+            game->player.moveOn(game->mapData,Direction::DOWN,distanceTank);
             break;
         case Qt::Key_Left:
-            game->player.moveOn(game->mapData,Direction::LEFT);
+            game->player.moveOn(game->mapData,Direction::LEFT,distanceTank);
             break;
         case Qt::Key_Right:
-            game->player.moveOn(game->mapData,Direction::RIGHT);
+            game->player.moveOn(game->mapData,Direction::RIGHT,distanceTank);
             break;
         case Qt::Key_Space:
             qDebug()<<"Piu Piu Piu!!!";

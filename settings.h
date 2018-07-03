@@ -13,6 +13,8 @@ public:
     static int life;
     static int width;
     static int height;
+    static int tankSize;
+    static int tankSpeed;
     static int bulletRadius;
     static int allEnemy;
     static unsigned int maxExist;

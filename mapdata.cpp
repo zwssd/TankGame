@@ -61,8 +61,8 @@ void MapData::drawGrass(QPainter &pen){
 }
 
 bool MapData::isSolid(int x,int y)const{
-    if(x<0||x>=width||y<0||y>=height)return true;
-    switch (mapVV[y][x]) {
+    if(x<0||x>=width*Settings::blockLength||y<0||y>=height*Settings::blockLength)return true;
+    switch (mapVV[y/Settings::blockLength][x/Settings::blockLength]) {
     case FillType::NOTHING:
     case FillType::GRASS:
         return false;
