@@ -43,6 +43,7 @@ void GameWindow::on_actionNew_triggered(){
     game->stop();
     sleep(1);
     delete game;
+    qDebug()<<"=====>>>>>";
     game=new Game(defaultMap);
     update();
 }

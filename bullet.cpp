@@ -1,5 +1,6 @@
 #include "bullet.h"
-#include"settings.h"
+#include "settings.h"
+#include "math.h"
 Bullet::Bullet(int x,int y,Direction direction,int speed)
     :x(x),y(y),direction(direction),speed(speed){
 }

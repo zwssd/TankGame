@@ -51,6 +51,7 @@ void Game::stop(){
 }
 //启动新进程
 void Game::start(Game *game,QMainWindow *w){
+    qDebug()<<"Game Start!!!";
     Game::connect(game,SIGNAL(up()) ,w,SLOT(update()));
     //
     game->isStarted=true;
@@ -74,6 +75,7 @@ void Game::start(Game *game,QMainWindow *w){
             game->player.moveOn(game->mapData,Direction::RIGHT);
             break;
         case Qt::Key_Space:
+            qDebug()<<"Piu Piu Piu!!!";
             game->player.shoot();
             break;
         default:

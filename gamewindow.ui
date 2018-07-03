@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuTools">
@@ -30,7 +30,13 @@
     <addaction name="actionNew"/>
     <addaction name="actionMap"/>
    </widget>
+   <widget class="QMenu" name="menuPress_the_P_key_to_start_the_game">
+    <property name="title">
+     <string>Press the P key to start the game!</string>
+    </property>
+   </widget>
    <addaction name="menuTools"/>
+   <addaction name="menuPress_the_P_key_to_start_the_game"/>
   </widget>
   <action name="actionNew">
    <property name="text">
