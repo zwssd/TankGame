@@ -20,7 +20,6 @@ void Tank::draw(QPainter &pen){
         pic.load(":/image/res/player.gif");
     qDebug()<<"x="<<x;
     qDebug()<<"y="<<y;
-    qDebug()<<"tankSize="<<Settings::tankSize;
         break;
     case TankType::ENERMY:
         pic.load(":/image/res/enemy.gif");
@@ -57,25 +56,25 @@ bool Tank::moveOn(const MapData &mapData, Direction input, int distanceTank){
     }
     switch (direction) {
     case Direction::UP:
-        if((!mapData.isSolid(x,y-1))&&(!mapData.isSolid(x+1,y-1))){
+        if((!mapData.isSolid(x,y-1*Settings::blockLength))&&(!mapData.isSolid(x+1*Settings::blockLength,y-1*Settings::blockLength))){
             y-=distanceTank;
             return true;
         }
         break;
     case Direction::DOWN:
-        if(!mapData.isSolid(x,y+2)&&!mapData.isSolid(x+1,y+2)){
+        if(!mapData.isSolid(x,y+2*Settings::blockLength)&&!mapData.isSolid(x+1*Settings::blockLength,y+2*Settings::blockLength)){
             y+=distanceTank;
             return true;
         }
         break;
     case Direction::LEFT:
-        if(!mapData.isSolid(x-1,y)&&!mapData.isSolid(x-1,y+1)){
+        if(!mapData.isSolid(x-1*Settings::blockLength,y)&&!mapData.isSolid(x-1*Settings::blockLength,y+1*Settings::blockLength)){
             x-=distanceTank;
             return true;
         }
         break;
     case Direction::RIGHT:
-        if(!mapData.isSolid(x+2,y)&&!mapData.isSolid(x+2,y+1)){
+        if(!mapData.isSolid(x+2*Settings::blockLength,y)&&!mapData.isSolid(x+2*Settings::blockLength,y+1*Settings::blockLength)){
             x+=distanceTank;
             return true;
         }
