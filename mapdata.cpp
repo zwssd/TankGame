@@ -4,6 +4,7 @@
 #include<QPainter>
 #include<fstream>
 #include"settings.h"
+#include"math.h"
 MapData::MapData(int width,int height,std::string filename)
     :width(width),height(height){
     loadMap(filename);
@@ -61,8 +62,21 @@ void MapData::drawGrass(QPainter &pen){
 }
 
 bool MapData::isSolid(int x,int y)const{
+    double dx = x,dy = y;
+    double dbL = Settings::blockLength;
+    int xx,yy;
+    xx = ceil(dx/dbL);
+    yy = ceil(dy/dbL);
+    if(xx>19)xx=19;
+    if(yy>19)yy=19;
+        qDebug()<<"x="<<x;
+        qDebug()<<"y="<<y;
+        qDebug()<<"x/Settings::blockLength="<<x/Settings::blockLength;
+        qDebug()<<"y/Settings::blockLength="<<y/Settings::blockLength;
+        qDebug()<<"ceil(x/Settings::blockLength)="<<ceil(dx/dbL);
+        qDebug()<<"ceil(y/Settings::blockLength)="<<ceil(dy/dbL);
     if(x<0||x>=width*Settings::blockLength||y<0||y>=height*Settings::blockLength)return true;
-    switch (mapVV[y/Settings::blockLength][x/Settings::blockLength]) {
+    switch (mapVV[yy][xx]) {
     case FillType::NOTHING:
     case FillType::GRASS:
         return false;

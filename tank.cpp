@@ -18,8 +18,8 @@ void Tank::draw(QPainter &pen){
     switch (type) {
     case TankType::PLAYER:
         pic.load(":/image/res/player.gif");
-    qDebug()<<"x="<<x;
-    qDebug()<<"y="<<y;
+    //qDebug()<<"x="<<x;
+    //qDebug()<<"y="<<y;
         break;
     case TankType::ENERMY:
         pic.load(":/image/res/enemy.gif");
@@ -68,13 +68,14 @@ bool Tank::moveOn(const MapData &mapData, Direction input, int distanceTank){
         }
         break;
     case Direction::LEFT:
-        if(!mapData.isSolid(x-1*Settings::blockLength,y)&&!mapData.isSolid(x-1*Settings::blockLength,y+1*Settings::blockLength)){
+        //if(!mapData.isSolid(x-1*Settings::blockLength,y)&&!mapData.isSolid(x-1*Settings::blockLength,y+1*Settings::blockLength)){
+        if(!mapData.isSolid(x,y)&&!mapData.isSolid(x,y+1*Settings::blockLength)){
             x-=distanceTank;
             return true;
         }
         break;
     case Direction::RIGHT:
-        if(!mapData.isSolid(x+2*Settings::blockLength,y)&&!mapData.isSolid(x+2*Settings::blockLength,y+1*Settings::blockLength)){
+        if(!mapData.isSolid(x+1*Settings::blockLength,y)&&!mapData.isSolid(x+1*Settings::blockLength,y+1*Settings::blockLength)){
             x+=distanceTank;
             return true;
         }
